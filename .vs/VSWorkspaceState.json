@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\assets",
+    "\\src\\models",
+    "\\src\\pages",
+    "\\src\\pages\\add-reservoir",
+    "\\src\\pages\\home",
+    "\\src\\pages\\register",
+    "\\src\\pages\\reservoir-details"
+  ],
+  "SelectedNode": "\\src\\pages\\add-reservoir\\add-reservoir.html",
+  "PreviewInSolutionExplorer": false
+}
