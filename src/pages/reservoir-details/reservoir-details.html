@@ -12,6 +12,16 @@
         <ion-icon name="arrow-round-back"></ion-icon>
       </button>
     </ion-buttons>
+    <ion-buttons right>
+      <button ion-button *ngIf="isAdminn" icon-only (click)="edit()" color="royal">
+        <ion-icon name="build"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button *ngIf="isAdminn" icon-only (click)="delete()" color="royal">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>Reservoir details</ion-title>
   </ion-toolbar>
 
@@ -48,9 +58,7 @@
     <button ion-button full color="danger" (click)="changePumpState()" [disabled]="!res.PompeState">OFF</button>
   </p>
 
-
 </ion-content>
-
 <ion-footer>
   <ion-toolbar>
     <ion-buttons left>

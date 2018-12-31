@@ -10,13 +10,16 @@ import { ReservoirDetailsPage } from '../pages/reservoir-details/reservoir-detai
 import { AddReservoirPage } from '../pages/add-reservoir/add-reservoir'
 import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { HttpModule } from '@angular/http';
+import { ReservoirEditPage } from '../pages/reservoir-edit/reservoir-edit';
+import { TokenInterceptorProvider } from '../providers/token-interceptor/token-interceptor';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ReservoirDetailsPage,
-    AddReservoirPage
+    AddReservoirPage,
+    ReservoirEditPage
   ],
   imports: [
     BrowserModule,
@@ -28,13 +31,15 @@ import { HttpModule } from '@angular/http';
     MyApp,
     HomePage,
     ReservoirDetailsPage,
-    AddReservoirPage
+    AddReservoirPage,
+    ReservoirEditPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthServiceProvider
+    AuthServiceProvider,
+    TokenInterceptorProvider
   ]
 })
 export class AppModule {}

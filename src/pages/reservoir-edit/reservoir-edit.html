@@ -1,5 +1,5 @@
 <!--
-  Generated template for the AddReservoirPage page.
+  Generated template for the ReservoirEditPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Add Reservoir</ion-title>
+    <ion-title>Edit Reservoir</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -28,17 +28,17 @@
             <ion-input type="number" placeholder="Max level of water (L)" name="max" [(ngModel)]="addCredentials.max" required></ion-input>
           </ion-item>
         </ion-list>
-        <ion-list >
+        <ion-list>
           <ion-list-header class="res-users">
             Select Users
           </ion-list-header>
           <ion-toolbar color="white">
-            <ion-searchbar full  (ionInput)="getItems($event)"></ion-searchbar>
-            </ion-toolbar>
-              <ion-item *ngFor="let user of listOfFiltredUsers" >
-                <ion-label >{{ user.Mail }}</ion-label>
-                <ion-checkbox checked="{{ user.IsChecked }}" (click)="checkItemState(user.Id)" color="danger"></ion-checkbox>
-              </ion-item>
+            <ion-searchbar full (ionInput)="getItems($event)"></ion-searchbar>
+          </ion-toolbar>
+          <ion-item *ngFor="let user of listOfFiltredUsers">
+            <ion-label >{{ user.Mail }}</ion-label>
+            <ion-checkbox checked="{{ user.IsChecked }}" (click)="checkItemState(user.Id)" color="danger"></ion-checkbox>
+          </ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
@@ -46,5 +46,5 @@
 </ion-content>
 
 <ion-footer class="blue">
-  <button ion-button class="submit-btn" full (click)="add()" [disabled]="!registerForm.form.valid">Add Reservoir</button>
+  <button ion-button class="submit-btn" full (click)="edit()" [disabled]="!registerForm.form.valid">Edit</button>
 </ion-footer>

@@ -34,13 +34,14 @@ export class LoginPage {
 
   public login() {
    this.showLoading()
-   /* if (this.registerCredentials.email && this.registerCredentials.password) {
+    if (this.registerCredentials.email && this.registerCredentials.password) {
       this.auth.login(this.registerCredentials).then(result => {
         this.resposeData = result;
         console.log(this.resposeData);
         if (this.resposeData.accessToken) {
-          localStorage.setItem("userData", JSON.stringify(this.resposeData));
-          this.nav.push('RegisterPage');
+          localStorage.setItem("permission", this.resposeData.permission);
+          localStorage.setItem("userToken", this.resposeData.accessToken);
+          this.nav.push(HomePage);
         }
         else if (this.resposeData.statusText) {
           this.showError("You subbmited wrong email or password");
@@ -50,15 +51,13 @@ export class LoginPage {
       },
         err => {
           {
-            this.showError("Login failed ,Try again later !");
+            this.showError("Login Failed, please check internet connexion");
           }
         }
       );
     } else {
       this.showError("Username and Password cannot be empty ! ");
-    }*/
-
-    this.nav.setRoot(HomePage);
+    }
   }
 
 

@@ -15,67 +15,47 @@ import { AddReservoirPage } from '../add-reservoir/add-reservoir'
 })
 export class HomePage implements OnInit {
   ngOnInit(): void {
-    var res: Reservoir[] = [];
-      var r = new Reservoir(1, "reservoir_beja", 10.0, 10.0, true);
-    res.push(r);
-    var r = new Reservoir(2, "reservoir_sfax", 100.0, 10.0, true);
-    res.push(r);
-    var r = new Reservoir(3, "reservoir_tunis", 100.0, 60.0, true);
-    res.push(r);
-    var r = new Reservoir(4, "reservoir_salakta", 200.0, 10.0, true);
-    res.push(r);
-    var r = new Reservoir(5, "reservoir_route_gaves", 100.0, 1.0, true);
-    res.push(r);
-    var r = new Reservoir(6, "reservoir_jandouba", 150.0, 11.6, true);
-    res.push(r);
-    var r = new Reservoir(7, "reservoir_sahloul", 155.0, 105.13, true);
-    res.push(r);
-    var r = new Reservoir(8, "reservoir_malek", 210.0, 150.0, true);
-    res.push(r);
-    var r = new Reservoir(9, "reservoir_mohamed", 122.0, 10.0, true);
-    res.push(r);
-    var r = new Reservoir(10, "reservoir_asil", 18.0, 10.0, true);
-    res.push(r);
-    var r = new Reservoir(11, "reservoir_zan9it_miled", 100.0, 10.0, true);
-    res.push(r);
-    var r = new Reservoir(12, "reservoir_lou2ay", 105.0, 10.0, true);
-    res.push(r);
-    localStorage.setItem("reservoirs", JSON.stringify(res));
-    for (var i = 0; i < 11000; i++)
-      var x =1;
+    this.auth.GetAllRes().then(result => {
+
+      var ress: Reservoir[] = []; 
+      this.responseData = result
+      //console.log(this.responseData);
+      for (let res of this.responseData) {
+        var reservoir: Reservoir = new Reservoir(res._id, res.Name, res.Max, res.Level, res.State, res.ListOfUsers);
+        ress.push(reservoir);
+      }
+      //console.log(JSON.stringify(ress));
+      this.reservoirs = ress;
+      console.log(this.reservoirs);
+      localStorage.setItem("reservoirsss", JSON.stringify(ress));
+    },
+      err => {
+        {
+          this.showPopup("Error", " failed ,Check internet connection !");
+        }
+      }
+    );
     }
 
   users;
   private isOn: boolean;
   private reservoirs: Reservoir[] = [];
   loading: Loading;
+  private responseData: any;
+  private isAdminn: boolean;
 
-  constructor(private nav: NavController, private auth: AuthServiceProvider, public http: Http, private loadingCtrl: LoadingController) {
+  constructor(private alertCtrl: AlertController, private nav: NavController, private auth: AuthServiceProvider, public http: Http, private loadingCtrl: LoadingController) {
     // this.getUsers();
     this.isOn = false;
-    this.initializeItems();
-   
-  }
-
-  public getUsers() {
-    let headers = new Headers(
-      {
-        'Authorization' : this.auth.getToken()
-      });
-
-    let options = new RequestOptions({ headers: headers });
-    // Change to this http://ed43bb3b.ngrok.io/api/users
-    let url = 'http://ed43bb3b.ngrok.io/api/users';
-    this.http.get(url, options).map(res => res.json()).subscribe(
-      data => {
-        this.users = data.data;
-      }
-    );
+    //this.initializeItems();
+    this.isAdminn = this.auth.isAdmin;
   }
 
   public logout() {
     this.auth.logout().subscribe(succ => {
+      localStorage.clear();
       this.nav.setRoot('LoginPage')
+     
     });
   }
   public toggleDetails() {
@@ -93,7 +73,7 @@ export class HomePage implements OnInit {
       return "yellow";
   }
   initializeItems() {
-    this.reservoirs = JSON.parse(localStorage.getItem("reservoirs"));
+    this.reservoirs = JSON.parse(localStorage.getItem("reservoirsss"));
   }
   getItems(ev: any) {
 
@@ -112,8 +92,26 @@ export class HomePage implements OnInit {
   }
   refresh() {
     this.showLoading();
-    for (var i = 0; i < 100000; ++i)
-      ++i;
+    this.auth.GetAllRes().then(result => {
+      var ress: Reservoir[] = [];
+      this.responseData = result
+      //console.log(this.responseData);
+      for (let res of this.responseData) {
+        var reservoir: Reservoir = new Reservoir(res._id, res.Name, res.Max, res.Level, res.State, res.ListOfUsers);
+        ress.push(reservoir);
+        console.log(res);
+      }
+      //console.log(JSON.stringify(ress));
+      this.reservoirs = ress;
+      localStorage.removeItem("reservoirsss");
+      localStorage.setItem("reservoirsss", JSON.stringify(ress));
+    },
+      err => {
+        {
+          this.showPopup("Error", " failed ,Check internet connection !");
+        }
+      }
+    );
     this.endLoading();
   }
   showLoading() {
@@ -128,5 +126,20 @@ export class HomePage implements OnInit {
   }
   add() {
     this.nav.push(AddReservoirPage);
+  }
+  showPopup(title, text) {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: text,
+      buttons: [
+        {
+          text: 'OK',
+        }
+      ]
+    });
+    alert.present();
+  }
+  get isAdmin() {
+    return Number( localStorage.getItem("permission")) > 2;
   }
 }

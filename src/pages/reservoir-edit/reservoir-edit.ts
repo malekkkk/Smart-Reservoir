@@ -3,9 +3,11 @@ import { IonicPage, NavController, NavParams, LoadingController, Loading, AlertC
 import { User } from '../../models/users'
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { ResToCreate } from '../../models/resToCreate';
+import { Reservoir } from '../../models/reservoir';
+import { HomePage } from '../home/home';
 
 /**
- * Generated class for the AddReservoirPage page.
+ * Generated class for the ReservoirEditPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -13,52 +15,74 @@ import { ResToCreate } from '../../models/resToCreate';
 
 @IonicPage()
 @Component({
-  selector: 'page-add-reservoir',
-  templateUrl: 'add-reservoir.html',
+  selector: 'page-reservoir-edit',
+  templateUrl: 'reservoir-edit.html',
 })
-export class AddReservoirPage {
+export class ReservoirEditPage {
 
   listOfUsers: User[]
   listOfFiltredUsers: User[]
   addCredentials = { name: '', max: '' };
   loading: Loading;
   responseData: any;
+  reservoir: Reservoir;
 
 
   constructor(private auth: AuthServiceProvider, public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
+    this.setUsersInLocalStorage();
     //this.initializeItems();
   }
   initializeItems() {
     this.listOfUsers = JSON.parse(localStorage.getItem("users"));
+    console.log(this.listOfUsers);
+    this.reservoir = this.navParams.get('res');
+    this.addCredentials.name = this.reservoir.Name;
+    this.addCredentials.max = String(this.reservoir.Max);
+    for (let id of this.reservoir.ListOfUsers) {
+      this.checkItemState(id)
+      console.log(this.listOfUsers);
+    };
     this.listOfFiltredUsers = this.listOfUsers;
+    
     console.log(this.listOfFiltredUsers);
   }
-  ionViewDidLoad() {
+  setUsersInLocalStorage() {
     var l: User[] = [];
     this.auth.GetAllUsers().then(result => {
       this.responseData = result
       for (let user of this.responseData) {
         var u = new User(user.id, user.email, false);
+
         l.push(u);
       }
+      console.log(l);
       this.listOfUsers = l;
+      console.log(this.listOfUsers);
+      this.reservoir = this.navParams.get('res');
+      this.addCredentials.name = this.reservoir.Name;
+      this.addCredentials.max = String(this.reservoir.Max);
+      for (let id of this.reservoir.ListOfUsers) {
+        this.checkItemState(id)
+      }
       this.listOfFiltredUsers = this.listOfUsers;
+        console.log(this.listOfUsers);
       localStorage.setItem("users", JSON.stringify(l));
     },
       err => {
         {
-          this.showPopup("Error"," failed ,Check internet connection !");
+          this.showPopup("Error", " failed ,Check internet connection !");
         }
       }
     );
   }
-  add() {
+  edit() {
+    this.showLoading();
     if (this.addCredentials.name.length < 6)
       this.showPopup("Error", "Reservoir name should contain at list 6 characters ...")
     else {
       this.presentConfirm();
-    
     }
+    this.endLoading();
   }
   getItems(ev: any) {
 
@@ -73,8 +97,10 @@ export class AddReservoirPage {
     }
   }
   checkItemState(id) {
+    console.log("here");
     var arrayIndex = this.listOfUsers.findIndex(r => r.Id == id);
-    this.listOfUsers[arrayIndex].IsChecked = !this.listOfUsers[arrayIndex].IsChecked;
+    if (this.listOfUsers[arrayIndex])
+      this.listOfUsers[arrayIndex].IsChecked = !this.listOfUsers[arrayIndex].IsChecked;
   }
   showLoading() {
     this.loading = this.loadingCtrl.create({
@@ -121,10 +147,19 @@ export class AddReservoirPage {
               listOfUsers.push(xx.Id);
             var resToCreate: ResToCreate = new ResToCreate(this.addCredentials.name, this.addCredentials.max, listOfUsers);
 
-            this.auth.CreateRes(resToCreate).then(result => {
-              this.responseData = result
-              this.showPopup("Reservoir Id", this.responseData.id);
-              this.navCtrl.pop();
+            this.auth.EditReservoir(resToCreate, this.reservoir.Id).then(result => {
+              this.showPopup("Congratulation", "Reservoir updated successfull");
+              this.reservoir.Name = this.addCredentials.name;
+              this.reservoir.ListOfUsers = listOfUsers;
+              this.reservoir.Max = Number(this.addCredentials.max);
+
+              var reservoirs: Reservoir[] = JSON.parse(localStorage.getItem("reservoirsss"));
+              var arrayIndex: number = reservoirs.findIndex(r => r.Id == this.reservoir.Id);
+              reservoirs[arrayIndex] = this.reservoir;
+              localStorage.removeItem("reservoirsss");
+              localStorage.setItem("reservoirsss", JSON.stringify(reservoirs));
+
+              this.navCtrl.push(HomePage);
             },
               err => {
                 {
@@ -138,4 +173,5 @@ export class AddReservoirPage {
     });
     alert.present();
   }
+
 }

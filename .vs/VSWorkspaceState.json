@@ -1,16 +1,18 @@
 {
   "ExpandedNodes": [
     "",
+    "\\resources",
+    "\\resources\\android",
+    "\\resources\\android\\icon",
     "\\src",
     "\\src\\app",
-    "\\src\\assets",
-    "\\src\\models",
     "\\src\\pages",
-    "\\src\\pages\\add-reservoir",
     "\\src\\pages\\home",
-    "\\src\\pages\\register",
-    "\\src\\pages\\reservoir-details"
+    "\\src\\pages\\reservoir-details",
+    "\\src\\providers",
+    "\\src\\providers\\auth-service",
+    "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\pages\\add-reservoir\\add-reservoir.html",
+  "SelectedNode": "\\resources\\spalshIcon.png",
   "PreviewInSolutionExplorer": false
 }

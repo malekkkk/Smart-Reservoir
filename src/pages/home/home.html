@@ -20,20 +20,20 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="alice">
 
   <ion-list>
-    <ion-item *ngFor="let r of reservoirs" (click)="reservoirDetails(r.Id)">
+    <ion-item class="cursuve" *ngFor="let r of reservoirs" (click)="reservoirDetails(r.Id)">
       <ion-icon name="square" color="{{iconColor(r)}}" class="levelState"></ion-icon>
       {{ r.Name }}
     </ion-item>
   </ion-list>
 </ion-content>
 
-<ion-fab right  bottom>
+<ion-fab *ngIf="isAdminn" right  bottom>
   <button ion-fab class="add-button" (click)="add()" ><ion-icon color="white" name="add"></ion-icon></button>
 </ion-fab>
 
-<ion-footer>
+<ion-footer class="blue">
   <button ion-button full (click)="refresh()">Refresh</button>
 </ion-footer>

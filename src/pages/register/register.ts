@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, Loading, LoadingController } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { LoginPage } from '../login/login'
 
@@ -18,14 +18,15 @@ import { LoginPage } from '../login/login'
 export class RegisterPage {
 
   responseData: any;
-
+  loading: Loading;
   createSuccess = false;
   registerCredentials = { name: '', email: '', password: '', confirmation_password: '' };
 
   constructor(
     private nav: NavController,
     private auth: AuthServiceProvider,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController,
   ) { }
 
   public register() {
@@ -42,6 +43,7 @@ export class RegisterPage {
     else {
       this.auth.register(this.registerCredentials).then(
         result => {
+          this.showLoading();
           this.responseData = result;
           console.log(result);
           if (result != null) {
@@ -91,5 +93,12 @@ export class RegisterPage {
   validatePassword(pass: string): boolean {
     var regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,50}$/;
     return regularExpression.test(pass);
+  }
+  showLoading() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Please wait...',
+      dismissOnPageChange: true
+    });
+    this.loading.present();
   }
 }
